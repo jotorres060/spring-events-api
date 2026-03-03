@@ -1,4 +1,4 @@
-package com.jotorres.events.config;
+package com.jotorres.events.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -23,7 +23,9 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((auth) ->
-                        auth.anyRequest().authenticated()
+                        auth
+                                .requestMatchers("/api/v1/auth/**").permitAll()
+                                .anyRequest().authenticated()
                         )
                 .httpBasic(Customizer.withDefaults());
 
