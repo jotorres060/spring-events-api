@@ -1,4 +1,4 @@
-package com.jotorres.events.dto;
+package com.jotorres.events.security.dto;
 
 import lombok.Data;
 

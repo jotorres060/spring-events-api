@@ -1,4 +1,4 @@
-package com.jotorres.events.service;
+package com.jotorres.events.security.service;
 
 import com.jotorres.events.domain.Role;
 import com.jotorres.events.domain.User;

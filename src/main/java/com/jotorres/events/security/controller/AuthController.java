@@ -1,12 +1,10 @@
-package com.jotorres.events.controller;
+package com.jotorres.events.security.controller;
 
-import com.jotorres.events.domain.Role;
 import com.jotorres.events.domain.User;
-import com.jotorres.events.dto.JwtAuthResponseDto;
-import com.jotorres.events.dto.LoginDto;
-import com.jotorres.events.dto.RegisterDto;
+import com.jotorres.events.security.dto.JwtAuthResponseDto;
+import com.jotorres.events.security.dto.LoginDto;
+import com.jotorres.events.security.dto.RegisterDto;
 import com.jotorres.events.mapper.UserMapper;
-import com.jotorres.events.repository.RoleRepository;
 import com.jotorres.events.repository.UserRepository;
 import com.jotorres.events.security.jwt.JwtGenerator;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +20,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collections;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/auth")
@@ -31,7 +27,6 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtGenerator jwtGenerator;
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
 
@@ -57,12 +52,8 @@ public class AuthController {
             return new ResponseEntity<>("Email already exists.", HttpStatus.BAD_REQUEST);
         }
 
-        Role roles = this.roleRepository.findByName("ROLE_USER")
-                .orElseThrow(() -> new RuntimeException("User role does not exist."));
-
         User user = this.userMapper.registerDtoToUser(registerDto);
         user.setPassword(this.passwordEncoder.encode(registerDto.getPassword()));
-        user.setRoles(Collections.singleton(roles));
         this.userRepository.save(user);
 
         return new ResponseEntity<>("User registered.", HttpStatus.CREATED);
